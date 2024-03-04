@@ -1,7 +1,8 @@
 
-import pandas as pd
+from colorama import Fore, Style
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 app = FastAPI()
 
@@ -23,6 +24,14 @@ def predict():
     """
     pass
 
+@app.get("/predict")
+def predict():
+    """
+    This is the endpoint for the predictions
+
+    Args: to be defined
+    """
+    pass
 
 @app.get("/")
 def root():
@@ -30,6 +39,11 @@ def root():
     This works as an API status checker
     '''
     response = {
-        'greeting': 'Carbon Calc Team is the best!'
+        'greeting': 'Carbon Calculator - The first step for a better world!'
     }
     return response
+
+
+if __name__ == '__main__':
+    print(Fore.GREEN + "--Carbon-Footprint-API-Started--" + Style.RESET_ALL)
+    uvicorn.run("fast:app", host='127.0.0.1', port=8000, log_level="info", reload=True)
