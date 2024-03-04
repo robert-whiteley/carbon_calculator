@@ -24,22 +24,14 @@ def predict():
     """
     pass
 
-@app.get("/predict")
-def predict():
-    """
-    This is the endpoint for the predictions
-
-    Args: to be defined
-    """
-    pass
-
 @app.get("/")
 def root():
     '''
     This works as an API status checker
     '''
     response = {
-        'greeting': 'Carbon Calculator - The first step for a better world!'
+        'res': 'Carbon Calculator - The first step for a better world!',
+        'authors': 'Robert, Joe, Daniel, Braveen, Mathieu'
     }
     return response
 

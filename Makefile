@@ -1,5 +1,5 @@
 start_api:
-	python api/fast.py
+	python carb_calc/api/fast.py
 
 install_requirements:
 	@pip install -r requirements.txt
