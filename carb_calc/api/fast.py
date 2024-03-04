@@ -2,6 +2,7 @@
 from colorama import Fore, Style
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
 
 app = FastAPI()
@@ -23,6 +24,24 @@ def predict():
     Args: to be defined
     """
     pass
+
+@app.get("/detect-objects")
+def detect_objects():
+    google_response = GoogleVision.localize_objects_uri('https://www.everydayfamilycooking.com/wp-content/uploads/2020/03/strawberries-and-applesauce.jpg')
+    print(f"Number of objects found: {len(google_response)}")
+    number_of_objects = len(google_response)
+    objects = []
+    for object_ in google_response:
+        obj = {
+            'name': object_.name,
+            'confidence': object_.score,
+        }
+
+        print(f"\n{object_.name} (confidence: {object_.score})")
+        print("Normalized bounding polygon vertices: ")
+        for vertex in object_.bounding_poly.normalized_vertices:
+            print(f" - ({vertex.x}, {vertex.y})")
+    return 'done'
 
 @app.get("/")
 def root():
