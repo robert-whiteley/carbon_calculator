@@ -5,3 +5,6 @@
 
 # Data
 raw_data/
+
+.env
+.env.yaml
