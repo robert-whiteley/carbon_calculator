@@ -1,5 +1,5 @@
 start_api:
-	python -c 'uvicorn api.fast:app'
+	python -c 'uvicorn fast:app'
 
 install_requirements:
 	@pip install -r requirements.txt
