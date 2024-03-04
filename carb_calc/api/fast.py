@@ -1,9 +1,11 @@
 
 from colorama import Fore, Style
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
+import base64
+import uuid
 
 app = FastAPI()
 
@@ -26,27 +28,78 @@ def predict():
     pass
 
 @app.get("/detect-objects")
-def detect_objects():
-    google_response = GoogleVision.localize_objects_uri('https://www.everydayfamilycooking.com/wp-content/uploads/2020/03/strawberries-and-applesauce.jpg')
-    print(f"Number of objects found: {len(google_response)}")
-    number_of_objects = len(google_response)
-    objects = []
-    for object_ in google_response:
-        obj = {
-            'name': object_.name,
-            'confidence': object_.score,
-        }
+def detect_objects(url:str = 'https://www.everydayfamilycooking.com/wp-content/uploads/2020/03/strawberries-and-applesauce.jpg'):
+    """
+    Endpoint to detect objects in an image.
 
-        print(f"\n{object_.name} (confidence: {object_.score})")
-        print("Normalized bounding polygon vertices: ")
-        for vertex in object_.bounding_poly.normalized_vertices:
-            print(f" - ({vertex.x}, {vertex.y})")
-    return 'done'
+    Returns:
+        dict: A dictionary containing information about detected objects in the image.
+              The dictionary has the following structure:
+              {
+                  'objects': [
+                      {
+                          'name': str,  # Name of the detected object
+                          'confidence': float,  # Confidence score of the detection
+                          'vertices': [  # List of vertices forming a bounding box around the object
+                              {
+                                  'x': float,  # X-coordinate of the vertex
+                                  'y': float   # Y-coordinate of the vertex
+                              },
+                              ...
+                          ]
+                      },
+                      ...
+                  ]
+              }
+    """
+    return GoogleVision.localize_objects_uri(url)
+
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    """
+     Endpoint to upload an image file and detect objects using Google Cloud Vision API.
+
+    Args:
+        file (UploadFile): The uploaded image file.
+
+    Returns:
+        dict: A dictionary containing information about detected objects in the image.
+            The dictionary has the following structure:
+            {
+                'objects': [
+                    {
+                        'name': str,  # Name of the detected object
+                        'confidence': float,  # Confidence score of the detection
+                        'vertices': [  # List of vertices forming a bounding box around the object
+                            {
+                                'x': float,  # X-coordinate of the vertex
+                                'y': float   # Y-coordinate of the vertex
+                            },
+                            ...
+                        ]
+                    },
+                    ...
+                ]
+            }
+    """
+    # Get a unique file name from the uploaded file
+    file.filename = f'{uuid.uuid4()}.jpg'
+
+    # Read the contents of the uploaded file
+    contents = await file.read()
+
+    return GoogleVision.localize_objects_base64(contents)
 
 @app.get("/")
 def root():
     '''
     This works as an API status checker
+    Returns:
+        dict: {
+            'res': 'Carbon Calculator - The first step for a better world!',
+            'authors': 'Robert, Joe, Daniel, Braveen, Mathieu'
+        }
+
     '''
     response = {
         'res': 'Carbon Calculator - The first step for a better world!',

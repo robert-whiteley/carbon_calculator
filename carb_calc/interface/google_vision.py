@@ -15,27 +15,69 @@ def localize_objects(path):
 
     objects = client.object_localization(image=image).localized_object_annotations
 
-    print(f"Number of objects found: {len(objects)}")
-    for object_ in objects:
-        print(f"\n{object_.name} (confidence: {object_.score})")
-        print("Normalized bounding polygon vertices: ")
-        for vertex in object_.bounding_poly.normalized_vertices:
-            print(f" - ({vertex.x}, {vertex.y})")
     return objects
 
 def localize_objects_uri(uri):
-    """Localize objects in the image on Google Cloud Storage
+    """Localize objects in the image on internet
 
     Args:
-    uri: The path to the file in Google Cloud Storage (gs://...)
+    uri: The path to the file in the internet
     """
-    from google.cloud import vision
-
     client = vision.ImageAnnotatorClient()
-
     image = vision.Image()
     image.source.image_uri = uri
+    response = convert_response(client.object_localization(image=image).localized_object_annotations)
 
-    objects = client.object_localization(image=image).localized_object_annotations
+    return response
 
-    return objects
+def localize_objects_base64(content):
+    """Localize objects in the image
+
+    Args:
+    content: The image in base64
+    """
+    client = vision.ImageAnnotatorClient()
+    image = vision.Image(content=content)
+    response = convert_response(client.object_localization(image=image).localized_object_annotations)
+    return response
+
+def convert_response(objects):
+    """
+    Convert response from Google Cloud Vision API into a structured format.
+
+    Args:
+        objects (List): List of objects detected by Google Cloud Vision API.
+
+    Returns:
+        dict: A dictionary containing information about detected objects in the image.
+              The dictionary has the following structure:
+              {
+                  'objects': [
+                      {
+                          'name': str,  # Name of the detected object
+                          'confidence': float,  # Confidence score of the detection
+                          'vertices': [  # List of vertices forming a bounding box around the object
+                              {
+                                  'x': float,  # X-coordinate of the vertex
+                                  'y': float   # Y-coordinate of the vertex
+                              },
+                              ...
+                          ]
+                      },
+                      ...
+                  ]
+              }
+    """
+    list_of_objects = []
+    for object_ in objects:
+        vertices = []
+        for vertex in object_.bounding_poly.normalized_vertices:
+            vertices.append({'x': vertex.x, 'y':vertex.y})
+        obj = {
+            'name': object_.name,
+            'confidence': object_.score,
+            'vertices': vertices
+        }
+        list_of_objects.append(obj)
+    response = {'objects' : list_of_objects}
+    return response
