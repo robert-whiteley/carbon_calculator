@@ -1,1 +1,4 @@
 raw_data/
+.DS_Store
+*Zone.Identifier
+.gitignore
