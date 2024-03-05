@@ -1,4 +1,14 @@
-raw_data/
+# OS generated files #
 .DS_Store
 *Zone.Identifier
-.gitignore
+# Data
+raw_data/
+__pycache__
+__pycache__/*
+
+.env
+.env.yaml
+
+.ipynb_checkpoints
+dotenv
+dotipynb_checkpoints
