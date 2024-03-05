@@ -2,9 +2,14 @@
 from colorama import Fore, Style
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import carb_calc.interface.google_vision as GoogleVision
+from PIL import Image
+import base64
+import io
 import uvicorn
 import uuid
+import numpy as np
 
 app = FastAPI()
 
@@ -52,7 +57,7 @@ def detect_objects(url:str = 'https://www.everydayfamilycooking.com/wp-content/u
               }
     """
     return GoogleVision.localize_objects_uri(url)
-
+'''
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     """
@@ -81,13 +86,14 @@ async def upload(file: UploadFile = File(...)):
                 ]
             }
     """
-    # Get a unique file name from the uploaded file
-    file.filename = f'{uuid.uuid4()}.jpg'
-
-    # Read the contents of the uploaded file
     contents = await file.read()
 
     return GoogleVision.localize_objects_base64(contents)
+'''
+@app.post("/upload")
+async def upload(image: UploadFile = File(...)):
+    contents = await image.read()
+    return JSONResponse(status_code=200, content={"message": GoogleVision.localize_objects_base64(contents)})
 
 @app.get("/")
 def root():
