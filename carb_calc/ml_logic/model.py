@@ -11,13 +11,14 @@ def load_model():
 
     return model
 
-def predict(processed_image, model):
+def prediction(processed_image, model):
     """
     Takes processed image and model as input and returns the class with the highest log likelihood
     """
     with torch.no_grad():
         log = model(**processed_image).logits
 
-    classification = log.argmax(-1).item()
+    predicted_label = log.argmax(-1).item()
+    classification = model.config.id2label[predicted_label]
 
-    return classification
+    return print(f"✅ {classification}")
