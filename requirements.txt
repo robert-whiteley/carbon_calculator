@@ -142,3 +142,6 @@ websocket-client==1.7.0
 
 # project specific
 notebook==7.1.1
+transformers==4.38.2
+tensorflow==2.15.0
+torch==2.2.1
