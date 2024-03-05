@@ -10,3 +10,5 @@ __pycache__/*
 .env.yaml
 
 .ipynb_checkpoints
+dotenv
+dotipynb_checkpoints
