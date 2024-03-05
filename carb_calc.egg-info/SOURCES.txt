@@ -1,0 +1,15 @@
+README.md
+setup.py
+carb_calc/__init__.py
+carb_calc/params.py
+carb_calc.egg-info/PKG-INFO
+carb_calc.egg-info/SOURCES.txt
+carb_calc.egg-info/dependency_links.txt
+carb_calc.egg-info/not-zip-safe
+carb_calc.egg-info/requires.txt
+carb_calc.egg-info/top_level.txt
+carb_calc/api/__init__.py
+carb_calc/api/fast.py
+carb_calc/interface/__init__.py
+carb_calc/interface/google_vision.py
+carb_calc/ml_logic/__init__.py
