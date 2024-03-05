@@ -6,11 +6,7 @@ from fastapi.responses import JSONResponse
 from carb_calc.ml_logic.model import load_model, prediction
 from carb_calc.ml_logic.preprocessor import preprocessing
 import carb_calc.interface.google_vision as GoogleVision
-from PIL import Image
-import base64
-import io
 import uvicorn
-import uuid
 import numpy as np
 
 app = FastAPI()
