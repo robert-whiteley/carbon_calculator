@@ -18,6 +18,7 @@ def predict(processed_image, model):
     with torch.no_grad():
         log = model(**processed_image).logits
 
-    classification = log.argmax(-1).item()
+    predicted_label = log.argmax(-1).item()
+    classification = model.config.id2label[predicted_label]
 
     return classification
