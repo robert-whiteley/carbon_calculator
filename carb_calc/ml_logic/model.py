@@ -11,7 +11,7 @@ def load_model():
 
     return model
 
-def predict(processed_image, model):
+def prediction(processed_image, model):
     """
     Takes processed image and model as input and returns the class with the highest log likelihood
     """
@@ -21,4 +21,4 @@ def predict(processed_image, model):
     predicted_label = log.argmax(-1).item()
     classification = model.config.id2label[predicted_label]
 
-    return classification
+    return print(f"✅ {classification}")
