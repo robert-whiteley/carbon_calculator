@@ -60,6 +60,19 @@ def detect_objects(url:str = 'https://www.everydayfamilycooking.com/wp-content/u
 
 @app.post("/upload")
 async def upload(image: UploadFile = File(...)):
+    """
+    Endpoint to upload an image and detect objects in it.
+
+    Args:
+        image (UploadFile): The image file to be uploaded for object detection.
+
+    Returns:
+        JSONResponse: A JSON response containing information about detected objects in the uploaded image.
+                      The response has the following structure:
+                      {
+                          'message': dict  # A dictionary containing information about detected objects in the image.
+                      }
+    """
     contents = await image.read()
     return JSONResponse(status_code=200, content={"message": GoogleVision.localize_objects_base64(contents)})
 
