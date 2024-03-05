@@ -4,7 +4,6 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
-import base64
 import uuid
 
 app = FastAPI()
@@ -106,7 +105,6 @@ def root():
         'authors': 'Robert, Joe, Daniel, Braveen, Mathieu'
     }
     return response
-
 
 if __name__ == '__main__':
     print(Fore.GREEN + "--Carbon-Footprint-API-Started--" + Style.RESET_ALL)
