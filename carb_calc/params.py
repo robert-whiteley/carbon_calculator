@@ -1,0 +1,21 @@
+import os
+
+##################  VARIABLES  ##################
+DATA_SIZE = os.environ.get("DATA_SIZE")
+CHUNK_SIZE= os.environ.get("DATA_SIZE")
+MODEL_TARGET = os.environ.get("DATA_SIZE")
+GCP_PROJECT = os.environ.get("DATA_SIZE")
+GCP_REGION = os.environ.get("DATA_SIZE")
+BUCKET_NAME = os.environ.get("DATA_SIZE")
+BQ_REGION = os.environ.get("DATA_SIZE")
+BQ_DATASET = os.environ.get("DATA_SIZE")
+INSTANCE = os.environ.get("DATA_SIZE")
+MLFLOW_TRACKING_URI = os.environ.get("DATA_SIZE")
+MLFLOW_EXPERIMENT = os.environ.get("DATA_SIZE")
+MLFLOW_MODEL_NAME = os.environ.get("DATA_SIZE")
+PREFECT_FLOW_NAME = os.environ.get("DATA_SIZE")
+PREFECT_LOG_LEVEL= os.environ.get("DATA_SIZE")
+YOUR_BATCH_NUMBER= os.environ.get("DATA_SIZE")
+YOUR_GITHUB_NICKNAME = os.environ.get("DATA_SIZE")
+GAR_IMAGE = os.environ.get("DATA_SIZE")
+GAR_MEMORY = os.environ.get("DATA_SIZE")
