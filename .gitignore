@@ -5,6 +5,8 @@
 
 # Data
 raw_data/
+__pycache__
+__pycache__/*
 
 .env
 .env.yaml
