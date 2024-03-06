@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from carb_calc.ml_logic.model import load_model, prediction
 from carb_calc.ml_logic.preprocessor import preprocessing
+from carb_calc.ml_logic.image_cropper import image_cropper
 import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
 import numpy as np
@@ -21,15 +22,19 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-@app.get("/predict")
-def predict(crop_image):
+@app.post("/predict")
+async def predict(image: UploadFile = File(...)):
     """
     This is the endpoint for the predictions
     Args: to be defined
     """
-    processed_image = preprocessing(crop_image)
+    image = await image.read()
+    object_localisation = GoogleVision.localize_objects_base64(image)
+    cropped_image = image_cropper(image, object_localisation)
+
+    processed_image = preprocessing(cropped_image)
     output = prediction(processed_image,app.state.model)
-    return output
+    return JSONResponse(status_code=200, content={"message": output})
 
 @app.get("/detect-objects")
 def detect_objects(url:str = 'https://www.everydayfamilycooking.com/wp-content/uploads/2020/03/strawberries-and-applesauce.jpg'):
