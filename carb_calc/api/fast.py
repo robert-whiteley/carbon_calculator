@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from carb_calc.ml_logic.model import load_model, prediction
 from carb_calc.ml_logic.preprocessor import preprocessing
+from carb_calc.ml_logic.image_cropper import image_cropper
 from carb_calc.ml_logic.co2_val import co2_query
 import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
@@ -22,16 +23,21 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-@app.get("/predict")
-def predict(crop_image):
+@app.post("/predict")
+async def predict(image: UploadFile = File(...)):
     """
     This is the endpoint for the predictions
     Args: to be defined
     """
-    processed_image = preprocessing(crop_image)
+    image = await image.read()
+    object_localisation = GoogleVision.localize_objects_base64(image)
+    cropped_image = image_cropper(image, object_localisation)
+
+    processed_image = preprocessing(cropped_image)
     classification = prediction(processed_image,app.state.model)
     output = co2_query(classification)
-    return output
+    return JSONResponse(status_code=200, content={"message": output})
+
 
 
 @app.get("/detect-objects")
