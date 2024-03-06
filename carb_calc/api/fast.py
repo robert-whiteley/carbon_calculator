@@ -2,11 +2,12 @@
 from colorama import Fore, Style
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from carb_calc.ml_logic.model import load_model, prediction
 from carb_calc.ml_logic.preprocessor import preprocessing
 import carb_calc.interface.google_vision as GoogleVision
 import uvicorn
-import uuid
+import numpy as np
 
 app = FastAPI()
 app.state.model = load_model()
@@ -58,40 +59,22 @@ def detect_objects(url:str = 'https://www.everydayfamilycooking.com/wp-content/u
     return GoogleVision.localize_objects_uri(url)
 
 @app.post("/upload")
-async def upload(file: UploadFile = File(...)):
+async def upload(image: UploadFile = File(...)):
     """
-     Endpoint to upload an image file and detect objects using Google Cloud Vision API.
+    Endpoint to upload an image and detect objects in it.
 
     Args:
-        file (UploadFile): The uploaded image file.
+        image (UploadFile): The image file to be uploaded for object detection.
 
     Returns:
-        dict: A dictionary containing information about detected objects in the image.
-            The dictionary has the following structure:
-            {
-                'objects': [
-                    {
-                        'name': str,  # Name of the detected object
-                        'confidence': float,  # Confidence score of the detection
-                        'vertices': [  # List of vertices forming a bounding box around the object
-                            {
-                                'x': float,  # X-coordinate of the vertex
-                                'y': float   # Y-coordinate of the vertex
-                            },
-                            ...
-                        ]
-                    },
-                    ...
-                ]
-            }
+        JSONResponse: A JSON response containing information about detected objects in the uploaded image.
+                      The response has the following structure:
+                      {
+                          'message': dict  # A dictionary containing information about detected objects in the image.
+                      }
     """
-    # Get a unique file name from the uploaded file
-    file.filename = f'{uuid.uuid4()}.jpg'
-
-    # Read the contents of the uploaded file
-    contents = await file.read()
-
-    return GoogleVision.localize_objects_base64(contents)
+    contents = await image.read()
+    return JSONResponse(status_code=200, content={"message": GoogleVision.localize_objects_base64(contents)})
 
 @app.get("/")
 def root():

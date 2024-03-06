@@ -37,7 +37,6 @@ def localize_objects_base64(content):
     """
     client = vision.ImageAnnotatorClient()
     image = vision.Image(content=content)
-    #features = [{'maxResults': 20}]
     response = convert_response(client.object_localization(image=image).localized_object_annotations)
     return response
 
