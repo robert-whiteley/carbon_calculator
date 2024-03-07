@@ -8,7 +8,7 @@ numpy==1.26.4
 pandas==2.2.1
 uvicorn==0.27.1
 tensorflow-cpu==2.15.0
-transformers[torch]==4.38.2
+transformers[torch]
 google-cloud-bigquery
 db-dtypes
 pillow==10.2.0
