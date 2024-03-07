@@ -147,3 +147,4 @@ tensorflow==2.15.0
 torch==2.2.1
 google-cloud-bigquery
 db-dtypes
+opencv-python==4.9.0.80
