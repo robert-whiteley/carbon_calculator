@@ -8,6 +8,7 @@ from carb_calc.ml_logic.preprocessor import preprocessing
 from carb_calc.ml_logic.image_cropper import image_cropper
 from carb_calc.ml_logic.co2_val import co2_query
 import carb_calc.interface.google_vision as GoogleVision
+import json
 import uvicorn
 import numpy as np
 
@@ -31,12 +32,13 @@ async def predict(image: UploadFile = File(...)):
     """
     image = await image.read()
     object_localisation = GoogleVision.localize_objects_base64(image)
-    cropped_image = image_cropper(image, object_localisation)
-
+    cropped_image, bin_cropped_image = image_cropper(image, object_localisation)
     processed_image = preprocessing(cropped_image)
     classification = prediction(processed_image,app.state.model)
     output = co2_query(classification)
-    return JSONResponse(status_code=200, content={"message": output})
+    cropped_image_json = json.dumps(np.array(cropped_image).tolist())
+
+    return JSONResponse(status_code=200, content={"message": output, "image_cropped":cropped_image_json})
 
 
 
