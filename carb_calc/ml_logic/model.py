@@ -5,7 +5,7 @@ def load_model():
     """
     Loads the model from the transformers package with pretrained weights
     """
-    model = AutoModelForImageClassification.from_pretrained("google/vit-base-patch16-224", from_pt=True)
+    model = AutoModelForImageClassification.from_pretrained("google/vit-base-patch16-224")
 
     print("✅ Model loaded")
 
