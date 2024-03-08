@@ -4,13 +4,15 @@ import cv2
 import numpy as np
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
-from carb_calc.ml_logic.model import load_model, prediction
-from carb_calc.ml_logic.preprocessor import preprocessing
+from carb_calc.ml_logic_v2.yolo_model import load_model, prediction
+from carb_calc.ml_logic_v2.yolo_preprocessor import load_preprocessor, preprocessing
+from PIL import Image
 
 app = Flask(__name__, static_folder="./templates/static")
 app.config["SECRET_KEY"] = "secret!"
 socketio = SocketIO(app)
 model = load_model()
+image_processor = load_preprocessor()
 
 async def load_model():
     return await load_model()
@@ -39,8 +41,11 @@ def receive_image(image):
     image = base64_to_image(image)
     #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     frame_resized = cv2.resize(image, (640, 360))
-    processed_image = preprocessing(image)
-    classification = prediction(processed_image,model)
+    image = Image.fromarray(image)
+    processed_image, target_sizes = preprocessing(image, image_processor)
+
+    objs_boxes = prediction(processed_image, target_sizes, image_processor, image, model)
+
 
     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
     result, frame_encoded = cv2.imencode(".jpg", frame_resized, encode_param)
@@ -49,9 +54,9 @@ def receive_image(image):
     b64_src = "data:image/jpg;base64,"
     processed_img_data = b64_src + processed_img_data
 
-    emit("processed_image", processed_img_data)
-    emit("classification", classification)
-
+    emit("image", processed_img_data)
+    if len(objs_boxes) > 0:
+        emit("classification", objs_boxes[0]['class'])
 
 @app.route("/")
 def index():
