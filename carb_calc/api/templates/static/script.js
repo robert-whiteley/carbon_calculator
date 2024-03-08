@@ -49,14 +49,31 @@ socket.on("processed_image", function (image) {
 socket.on("result", function(result){
   mycontext.clearRect(0,0,width,height)
   photo.setAttribute("src", result['image']);
+  console.log(result['bboxes'])
+  if (result['bboxes'].length >0){
 
-  x = result['bboxes'][0]['bbox'][0]
-  y = result['bboxes'][0]['bbox'][1]
+      console.log(result['bboxes'][0]['class'])
+      x = result['bboxes'][0]['bbox'][0]
+      y = result['bboxes'][0]['bbox'][1]
+      if (x<0){
+        x=0
+      }
+      if (y<0){
+        y=0
+      }
+      box_width = result['bboxes'][0]['bbox'][2]*width - x
+      box_height = result['bboxes'][0]['bbox'][3]*height - y
+      x = x*width
+      y = y*height
+      console.log(x,y, box_width, box_height)
+      mycontext.beginPath();
+      mycontext.rect(x, y, box_width, box_height);
+      mycontext.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      mycontext.fill();
 
-  mycontext.beginPath();
-  mycontext.rect(188, 50, 200, 100);
-  mycontext.fillStyle = 'rgba(255, 255, 255, 0)';
-  mycontext.fill();
+
+
+  }
 })
 
 socket.on("classification", function (text) {
