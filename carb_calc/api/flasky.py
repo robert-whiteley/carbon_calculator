@@ -53,16 +53,8 @@ def receive_image(image):
 
     b64_src = "data:image/jpg;base64,"
     processed_img_data = b64_src + processed_img_data
-    bboxes = [{'class': 'apple', 'bbox': [0.3, 0.561, 0.577, 0.932]},
-              {'class': 'orange', 'bbox': [0.095, 0.256, 0.452, 0.8]},
-              {'class': 'dining table', 'bbox': [0.0, 0.565, 1.0, 0.985]},
-              {'class': 'apple', 'bbox': [0.453, 0.461, 0.696, 0.793]}]
-
     package = {'image': processed_img_data, 'bboxes': objs_boxes}
     emit('result', package)
-    #emit("processed_image", processed_img_data)
-    #emit("classification", classification)
-    emit("bboxes", bboxes)
 
     if len(objs_boxes) > 0:
         emit("classification", objs_boxes[0]['class'])

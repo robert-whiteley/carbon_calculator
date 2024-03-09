@@ -30,7 +30,7 @@ if (navigator.mediaDevices.getUserMedia) {
     .catch(function (err0r) {});
 }
 
-const FPS = 5;
+const FPS = 2;
 setInterval(() => {
   width = video.width;
   height = video.height;
@@ -40,14 +40,8 @@ setInterval(() => {
   socket.emit("image", data);
 }, 1000 / FPS);
 
-/*
-socket.on("processed_image", function (image) {
-  photo.setAttribute("src", image);
-});
-*/
-
 socket.on("result", function(result){
-  mycontext.clearRect(0,0,width,height)
+
   photo.setAttribute("src", result['image']);
   console.log(result['bboxes'])
   if (result['bboxes'].length >0){
@@ -61,18 +55,18 @@ socket.on("result", function(result){
       if (y<0){
         y=0
       }
+
       box_width = result['bboxes'][0]['bbox'][2]*width - x
       box_height = result['bboxes'][0]['bbox'][3]*height - y
       x = x*width
       y = y*height
       console.log(x,y, box_width, box_height)
-      mycontext.beginPath();
-      mycontext.rect(x, y, box_width, box_height);
-      mycontext.fillStyle = 'rgba(255, 255, 255, 0.5)';
-      mycontext.fill();
 
-
-
+      context.strokeStyle = 'green';
+      context.strokeRect(x, y, box_width, box_height);
+      context.linewidth = 5;
+      context.fillStyle = "rgba(195, 255, 104, 0.1)";
+      context.fillRect(x, y, box_width, box_height);
   }
 })
 
