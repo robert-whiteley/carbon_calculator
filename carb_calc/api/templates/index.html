@@ -1,37 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Flask Client Camera Web App</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <style>body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #d9f7be; /* Light green background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  /* Add this CSS code to style your popup modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
 
-    <style>
-     #video {
-      transform: rotateY(180deg);
-      -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-      -moz-transform:rotateY(180deg); /* Firefox */
-     }
-    </style>
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-  </head>
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+}
 
-  <body>
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
 
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+  header {
+    background-color: #4caf50; /* Green header */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  header p {
+    font-size: 1.2rem;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  canvas {
+    position: absolute;
+  }
+
+  #container {
+    position: relative;
+    margin-right: 20px;
+  }
+
+  #carbonInfo {
+    max-width: 400px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  #projectDescription {
+    background-color: #fff; /* White background */
+    padding: 20px;
+    margin: 20px;
+  }
+
+  #projectDescription h2 {
+    color: #4caf50; /* Green header */
+    margin-bottom: 10px;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+  }
+  </style>
+</head>
+<body>
+  <!-- Popup modal -->
+  <div id="popupModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Object Detected</h2>
+      <div id="popupContent">
+        <!-- Content will be populated dynamically -->
+      </div>
+    </div>
+  </div>
+  <header>
+    <h1>Carbon Calculator</h1>
+    <p>Estimate your carbon footprint</p>
+  </header>
+  <main>
     <div id="container">
-      <canvas id="canvas" width="400" height="300" style="position: absolute;"></canvas>
-      <video autoplay playsinline id="videoElement"></video>
+      <canvas id="canvas" width="400" height="300"></canvas>
+      <video autoplay playsinline id="videoElement" class="flipped"></video>
     </div>
-    <p id="classification"></p>
-    <p id="bboxes"></p>
-    <div class= 'video'>
-      <canvas id="mycanvas" width="400" height="300" style="position: absolute;"></canvas>
-      <img id="photo" width="400" height="300">
-
-
+    <div id="carbonInfo">
+      <h2>Carbon Emission</h2>
+      <p id="classification"></p>
+      <p id="bboxes"></p>
     </div>
-    <script src="{{ url_for('static',filename='script.js') }}"></script>
-  </body>
-
+  </main>
+  <section id="projectDescription">
+    <h2>About the Project</h2>
+    <p>
+      The Carbon Calculator project aims to raise awareness about carbon emissions and help individuals estimate their carbon footprint. By analyzing video footage, the system can identify and track sources of carbon emissions, providing valuable insights into environmental impact.
+    </p>
+    <p>
+      Through this project, we hope to empower individuals to make more informed choices about their daily activities and encourage sustainable practices to reduce carbon emissions and combat climate change.
+    </p>
+  </section>
+  <footer>
+    <p>&copy; 2024 Carbon Calculator. All rights reserved.</p>
+  </footer>
+  <script src="{{ url_for('static',filename='script.js') }}"></script>
+</body>
 </html>
