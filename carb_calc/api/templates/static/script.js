@@ -1,7 +1,9 @@
-var socket = io.connect(
-  window.location.protocol + "//" + document.domain + ":" + location.port
-  /*'http://localhost:6400'*/
+/*var socket = io.connect(
+  //window.location.protocol + "//" + document.domain + ":" + location.port
+  'http://localhost:8080'
 );
+*/
+var socket = io.connect(window.location.origin);
 
 socket.on("connect", function () {
   console.log("Connected...!", socket.connected);
@@ -18,6 +20,7 @@ var context = canvas.getContext("2d");
 const video = document.querySelector("#videoElement");
 var classification = document.getElementById("classification")
 var bboxes = document.getElementById("bboxes")
+var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 
 video.width = 600;
 video.height = 450;
@@ -34,9 +37,7 @@ if (navigator.mediaDevices.getUserMedia) {
     .catch(function (err0r) {});
 }
 
-
-
-const FPS = 10;
+const FPS = 2;
 setInterval(() => {
   width = video.width;
   height = video.height;
@@ -99,21 +100,22 @@ socket.on("result", function(result){
         <p>Class: ${detectedClass}</p>
         `;
       });
-
-      // Show the popup modal
-      modal.style.display = "block";
-      socketActive = false;
+      console.log(autoModalCheckbox.checked);
+      if (autoModalCheckbox.checked) {
+        // Show the popup modal
+        modal.style.display = "block";
+        socketActive = false;
+      }
     }
   }
 })
 
 function closeModal() {
   modal.style.display = "none";
-
   // Add the event listener back
   socketActive = true;
+  autoModalCheckbox.checked = false;
 }
-
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
