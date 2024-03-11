@@ -3,8 +3,8 @@ import cv2
 import numpy as np
 from flask import Flask, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
-from carb_calc.ml_logic_v2.yolo_model import load_model, prediction
-from carb_calc.ml_logic_v2.yolo_preprocessor import load_preprocessor, preprocessing
+from ml_logic_v2.yolo_model import load_model, prediction
+from ml_logic_v2.yolo_preprocessor import load_preprocessor, preprocessing
 from PIL import Image
 
 app = Flask(__name__, static_folder="./templates/static")

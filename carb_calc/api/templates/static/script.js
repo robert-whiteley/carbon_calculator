@@ -1,7 +1,9 @@
-var socket = io.connect(
-  window.location.protocol + "//" + document.domain + ":" + location.port
-  /*'http://localhost:6400'*/
+/*var socket = io.connect(
+  //window.location.protocol + "//" + document.domain + ":" + location.port
+  'http://localhost:8080'
 );
+*/
+var socket = io.connect(window.location.origin);
 
 socket.on("connect", function () {
   console.log("Connected...!", socket.connected);
@@ -35,7 +37,7 @@ if (navigator.mediaDevices.getUserMedia) {
     .catch(function (err0r) {});
 }
 
-const FPS = 10;
+const FPS = 2;
 setInterval(() => {
   width = video.width;
   height = video.height;
