@@ -37,7 +37,7 @@ async def predict(image: UploadFile = File(...)):
     print("✅ cropped image returned")
     processed_image = preprocessing(cropped_image)
     classification = prediction(processed_image,app.state.base_model,app.state.tuned_model)
-    output = co2_query(classification)
+    output = co2_query(classification[0])
     cropped_image_json = json.dumps(np.array(cropped_image).tolist())
 
     return JSONResponse(status_code=200, content={"message": output, "image_cropped":cropped_image_json})
