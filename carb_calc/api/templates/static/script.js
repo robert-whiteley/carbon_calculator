@@ -18,6 +18,7 @@ var context = canvas.getContext("2d");
 const video = document.querySelector("#videoElement");
 var classification = document.getElementById("classification")
 var bboxes = document.getElementById("bboxes")
+var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 
 video.width = 600;
 video.height = 450;
@@ -33,8 +34,6 @@ if (navigator.mediaDevices.getUserMedia) {
     })
     .catch(function (err0r) {});
 }
-
-
 
 const FPS = 10;
 setInterval(() => {
@@ -99,19 +98,21 @@ socket.on("result", function(result){
         <p>Class: ${detectedClass}</p>
         `;
       });
-
-      // Show the popup modal
-      modal.style.display = "block";
-      socketActive = false;
+      console.log(autoModalCheckbox.checked);
+      if (autoModalCheckbox.checked) {
+        // Show the popup modal
+        modal.style.display = "block";
+        socketActive = false;
+      }
     }
   }
 })
 
 function closeModal() {
   modal.style.display = "none";
-
   // Add the event listener back
   socketActive = true;
+  autoModalCheckbox.checked = false;
 }
 
 
