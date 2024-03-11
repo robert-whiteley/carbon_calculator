@@ -1,35 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Flask Client Camera Web App</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Calculator</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff; /* Light green background */
+    background-image: url('https://images.unsplash.com/photo-1528200575999-1853e416cf07?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  /* Add this CSS code to style your popup modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
 
-    <style>
-     #video {
-      transform: rotateY(180deg);
-      -webkit-transform:rotateY(180deg); /* Safari and Chrome */
-      -moz-transform:rotateY(180deg); /* Firefox */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+  }
 
-     }
-    </style>
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-  </head>
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
 
-  <body>
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
+  header {
+    background-color: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 20px;
+    text-align: left;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  header p {
+    font-size: 1.2rem;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  canvas {
+    position: absolute;
+  }
+
+  #container {
+    position: relative;
+    margin-right: 20px;
+    border: #113208 10px solid;
+    border-radius: 8px;
+  }
+
+  #carbonInfo {
+    max-width: 400px;
+  }
+
+  #team-pic {
+    width: 60vw;
+    height: "auto";
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  #projectDescription {
+    background-color: rgba(255,255,255,0.6); /* White background */
+    padding: 20px;
+    margin: 20px;
+  }
+
+  #projectDescription h2 {
+    color: #4caf50; /* Green header */
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+  }
+  </style>
+</head>
+<body>
+  <!-- Popup modal -->
+  <div id="popupModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Object Detected</h2>
+      <div id="popupContent">
+        <!-- Content will be populated dynamically -->
+      </div>
+    </div>
+  </div>
+  <header>
+    <h1>Carbon Calculator</h1>
+    <p>The first step for a better world!</p>
+  </header>
+  <main>
     <div id="container">
-      <video autoplay playsinline id="videoElement"></video>
-      <canvas id="canvas" width="400" height="300"></canvas>
+      <canvas id="canvas" width="600" height="450"></canvas>
+      <video autoplay playsinline id="videoElement" class="flipped"></video>
     </div>
-    <p id="classification"></p>
-    <div class= 'video'>
-      <img id="photo" width="400" height="300">
-
+    <div id="carbonInfo">
+      <h2>Carbon Emission</h2>
+      <p id="classification">Place a fruit or a vegetable in front of the camera.</p>
+      <p id="bboxes"></p>
     </div>
-    <script src="{{ url_for('static',filename='script.js') }}"></script>
-  </body>
-
+  </main>
+  <section id="projectDescription">
+    <h2>About the Project</h2>
+    <p>
+      The Carbon Calculator project aims to raise awareness about carbon emissions and help estimate carbon footprint of vegetables and fruits. By analysing live stream footage, the system can identify fruits and vegetables, providing valuable insights into environmental impact.
+    </p>
+    <img id="team-pic" src="{{ url_for('static',filename='team.jpg')}}">
+  </section>
+  <footer>
+    <p>&copy; 2024 Carbon Calculator. All rights reserved.</p>
+  </footer>
+  <script src="{{ url_for('static',filename='script.js')}}"></script>
+</body>
 </html>
