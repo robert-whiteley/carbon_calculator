@@ -26,13 +26,31 @@ classes = ['Apple Braeburn', 'Apple Crimson Snow', 'Apple Golden 1', 'Apple Gold
     'Tomato 1', 'Tomato 2', 'Tomato 3', 'Tomato 4', 'Tomato Cherry Red', 'Tomato Heart',
     'Tomato Maroon', 'Tomato Yellow', 'Tomato not Ripened', 'Walnut', 'Watermelon']
 
-def load_model():
+def base_load_model():
     """
     Loads the model from the transformers package with pretrained weights, and our pre_trained classification model.
     """
     base_model = AutoModelForImageClassification.from_pretrained("google/vit-base-patch16-224")
 
     print("✅ base_model loaded")
+
+    #tuned_model = tf.keras.saving.load_model(os.path.join(os.getcwd(), 'carb_calc', 'first_model.keras'))
+
+    #print("✅ tuned_model loaded")
+
+    #tuned_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics='accuracy')
+
+    #print("✅ tuned_model compiled")
+
+    return base_model
+
+def tuned_load_model():
+    """
+    Loads the model from the transformers package with pretrained weights, and our pre_trained classification model.
+    """
+    #base_model = AutoModelForImageClassification.from_pretrained("google/vit-base-patch16-224")
+
+    #print("✅ base_model loaded")
 
     tuned_model = tf.keras.saving.load_model(os.path.join(os.getcwd(), 'carb_calc', 'first_model.keras'))
 
@@ -42,7 +60,9 @@ def load_model():
 
     print("✅ tuned_model compiled")
 
-    return base_model, tuned_model
+    return tuned_model
+
+
 
 def prediction(processed_image, model1, model2):
     """

@@ -3,7 +3,7 @@ from colorama import Fore, Style
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from carb_calc.ml_logic.model import load_model, prediction
+from carb_calc.ml_logic.model import base_load_model, prediction, tuned_load_model
 from carb_calc.ml_logic.preprocessor import preprocessing
 from carb_calc.ml_logic.image_cropper import image_cropper
 from carb_calc.ml_logic.co2_val import co2_query
@@ -13,7 +13,8 @@ import uvicorn
 import numpy as np
 
 app = FastAPI()
-app.state.base_model, app.state.tuned_model = load_model()
+app.state.base_model = base_load_model()
+app.state.base_model = tuned_load_model()
 
 # Allowing all middleware is optional, but good practice for dev purposes
 app.add_middleware(
