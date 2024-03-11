@@ -4,6 +4,8 @@ COPY docker-require.txt /docker-require.txt
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 vim -y
 RUN pip install --upgrade pip
 RUN pip install -r docker-require.txt
-WORKDIR /carb_calc
+#WORKDIR /carb_calc
 ENV PYTHONPATH=/carb_calc
-CMD python api/flasky.py
+#CMD python api/flasky.py
+#CMD uvicorn carb_calc.api.fast:app --host 0.0.0.0 --port $PORT
+CMD gunicorn --worker-class gevent --bind :$PORT --workers 1 --timeout 0 carb_calc.api.flasky:app

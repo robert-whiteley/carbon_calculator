@@ -36,59 +36,68 @@ if (navigator.mediaDevices.getUserMedia) {
     })
     .catch(function (err0r) {});
 }
+// Store bounding boxes globally
+var boundingBoxes = [];
 
-const FPS = 2;
+// Draw bounding boxes
+function drawBoundingBoxes() {
+  boundingBoxes.forEach(function(bbox) {
+    context.strokeRect(bbox.x, bbox.y, bbox.width, bbox.height);
+    context.lineWidth = 1;
+    context.fillStyle = "rgba(195, 255, 104, 0.1)";
+    context.fillRect(bbox.x, bbox.y, bbox.width, bbox.height);
+
+    // Draw label text on top corner of the bounding box
+    context.fillStyle = 'green';
+    context.font = '14px Arial';
+    context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
+  });
+}
+
+// Video rendering
+const VIDEO_FPS = 30;
 setInterval(() => {
   width = video.width;
   height = video.height;
   context.drawImage(video, 0, 0, width, height);
+
+  // Draw bounding boxes
+  drawBoundingBoxes();
+}, 1000 / VIDEO_FPS);
+
+// Inference
+const INFERENCE_FPS = 2;
+setInterval(() => {
   var data = canvas.toDataURL("image/jpeg", 0.5);
   socket.emit("image", data);
-}, 1000 / FPS);
+}, 1000 / INFERENCE_FPS);
 
 socket.on("result", function(result){
   if (socketActive){
-    console.log(result['bboxes'])
     if (result['bboxes'].length >0){
+      // Clear previous bounding boxes
+      boundingBoxes = [];
+
       result['bboxes'].forEach(function(obj){
-        console.log(obj['class'])
-        x = obj['bbox'][0]
-        y = obj['bbox'][1]
-        if (x < 0){
-          x = 0
-        }
-        if (y < 0){
-          y = 0
-        }
+        var bbox = {
+          x: obj['bbox'][0] * width,
+          y: obj['bbox'][1] * height,
+          width: obj['bbox'][2] * width - obj['bbox'][0] * width,
+          height: obj['bbox'][3] * height - obj['bbox'][1] * height,
+          class: obj['class']
+        };
 
-        box_width = obj['bbox'][2] * width - x
-        box_height = obj['bbox'][3] * height - y
-        x = x * width
-        y = y * height
-
-        // Draw bounding box
-        context.strokeRect(x, y, box_width, box_height);
-        context.lineWidth = 1;
-        context.fillStyle = "rgba(195, 255, 104, 0.1)";
-        context.fillRect(x, y, box_width, box_height);
-
-        // Draw label text on top corner of the bounding box
-        context.fillStyle = 'green';
-        context.font = '14px Arial';
-        context.fillText(obj['class'], x+2, y + 14);
-        // Extract the class and carbon footprint per unit
-        var detectedClass = obj['class'];
-
-
+        // Add to global bounding boxes
+        boundingBoxes.push(bbox);
 
         // Create a new canvas to draw the cropped image
         var cropCanvas = document.createElement('canvas');
-        cropCanvas.width = box_width;
-        cropCanvas.height = box_height;
+        cropCanvas.width = bbox.width;
+        cropCanvas.height = bbox.height;
         var cropContext = cropCanvas.getContext('2d');
 
         // Draw the cropped image on the new canvas
-        cropContext.drawImage(video, x, y, box_width, box_height, 0, 0, box_width, box_height);
+        cropContext.drawImage(video, bbox.x, bbox.y, bbox.width, bbox.height, 0, 0, bbox.width, bbox.height);
 
         // Convert the cropped image canvas to a data URL
         var croppedImageDataURL = cropCanvas.toDataURL("image/jpeg", 0.5);
@@ -97,10 +106,10 @@ socket.on("result", function(result){
         var popupContent = document.getElementById('popupContent');
         popupContent.innerHTML = `
         <img src="${croppedImageDataURL}" alt="Cropped Image">
-        <p>Class: ${detectedClass}</p>
+        <p>Class: ${bbox.class}</p>
         `;
       });
-      console.log(autoModalCheckbox.checked);
+
       if (autoModalCheckbox.checked) {
         // Show the popup modal
         modal.style.display = "block";
