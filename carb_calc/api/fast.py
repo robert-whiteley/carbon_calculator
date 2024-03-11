@@ -13,7 +13,7 @@ import uvicorn
 import numpy as np
 
 app = FastAPI()
-app.state.model = load_model()
+app.state.base_model, app.state.tuned_model = load_model()
 
 # Allowing all middleware is optional, but good practice for dev purposes
 app.add_middleware(
@@ -32,9 +32,11 @@ async def predict(image: UploadFile = File(...)):
     """
     image = await image.read()
     object_localisation = GoogleVision.localize_objects_base64(image)
+    print("✅ bounding box returned")
     cropped_image, bin_cropped_image = image_cropper(image, object_localisation)
+    print("✅ cropped image returned")
     processed_image = preprocessing(cropped_image)
-    classification = prediction(processed_image,app.state.model)
+    classification = prediction(processed_image,app.state.base_model,app.state.tuned_model)
     output = co2_query(classification)
     cropped_image_json = json.dumps(np.array(cropped_image).tolist())
 
