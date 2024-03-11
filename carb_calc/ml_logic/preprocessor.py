@@ -10,8 +10,7 @@ def preprocessing(image):
     Takes image (jpeg, webp) as an input and processes it using google's image processor
     """
     processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-224")
-    processor(image, return_tensors='pt')
-    processed_image = processor(image, return_tensors='pt')
+    processed_image = processor(image, return_tensors='tf')
 
     print("✅ Processed image")
 
