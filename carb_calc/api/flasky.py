@@ -1,5 +1,4 @@
 import base64
-import os
 import cv2
 import numpy as np
 from flask import Flask, render_template, send_from_directory
@@ -39,21 +38,16 @@ def test_connect():
 def receive_image(image):
     # Decode the base64-encoded image data
     image = base64_to_image(image)
-    #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     frame_resized = cv2.resize(image, (640, 360))
     image = Image.fromarray(image)
     processed_image, target_sizes = preprocessing(image, image_processor)
-
     objs_boxes = prediction(processed_image, target_sizes, image_processor, image, model)
 
 
-    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 50]
-    result, frame_encoded = cv2.imencode(".jpg", frame_resized, encode_param)
-    processed_img_data = base64.b64encode(frame_encoded).decode()
-
-    b64_src = "data:image/jpg;base64,"
-    processed_img_data = b64_src + processed_img_data
-    package = {'image': processed_img_data, 'bboxes': objs_boxes}
+    #processed_img_data = base64.b64encode(frame_encoded).decode()
+    #b64_src = "data:image/jpg;base64,"
+    #processed_img_data = b64_src + processed_img_data
+    package = {'bboxes': objs_boxes}
     emit('result', package)
 
     if len(objs_boxes) > 0:

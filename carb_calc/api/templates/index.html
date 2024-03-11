@@ -51,7 +51,6 @@
     cursor: pointer;
   }
 
-
   header {
     background-color: rgba(0,0,0,0.6);
     color: #fff;
@@ -89,6 +88,13 @@
 
   #carbonInfo {
     max-width: 400px;
+  }
+
+  #team-pic {
+    width: 60vw;
+    height: "auto";
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
 
   h2 {
@@ -137,12 +143,12 @@
   </header>
   <main>
     <div id="container">
-      <canvas id="canvas" width="400" height="300"></canvas>
+      <canvas id="canvas" width="600" height="450"></canvas>
       <video autoplay playsinline id="videoElement" class="flipped"></video>
     </div>
     <div id="carbonInfo">
       <h2>Carbon Emission</h2>
-      <p id="classification"></p>
+      <p id="classification">Place a fruit or a vegetable in front of the camera.</p>
       <p id="bboxes"></p>
     </div>
   </main>
@@ -151,13 +157,11 @@
     <p>
       The Carbon Calculator project aims to raise awareness about carbon emissions and help estimate carbon footprint of vegetables and fruits. By analysing live stream footage, the system can identify fruits and vegetables, providing valuable insights into environmental impact.
     </p>
-    <p>
-      Through this project, we hope to empower individuals to make more informed choices about their daily activities and encourage sustainable practices to reduce carbon emissions and combat climate change.
-    </p>
+    <img id="team-pic" src="{{ url_for('static',filename='team.jpg')}}">
   </section>
   <footer>
     <p>&copy; 2024 Carbon Calculator. All rights reserved.</p>
   </footer>
-  <script src="{{ url_for('static',filename='script2.js')}}"></script>
+  <script src="{{ url_for('static',filename='script.js')}}"></script>
 </body>
 </html>
