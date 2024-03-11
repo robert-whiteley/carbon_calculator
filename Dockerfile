@@ -5,6 +5,6 @@ RUN pip install --upgrade pip
 RUN pip install -r docker-require.txt
 
 
-ENV FLASK_APP carb_calc/api/flask.py
+ENV FLASK_APP carb_calc/api/flasky.py
 ENV FLASK_ENV production
 CMD flask run --host 0.0.0.0 --port $PORT
