@@ -48,7 +48,7 @@ def co2_query(text:str):
             'Blueberry': 'BLUEBERRY','Ginger Root': 'GINGER','Mango': 'MANGO',
             'Pear Forelle': 'PEAR','Potato Red Washed': 'POTATO','Watermelon': 'WATERMELON',
             'Cactus fruit': 'EXOTIC FRUIT','Granadilla': 'EXOTIC FRUIT','Mango Red': 'MANGO',
-            'Pear Kaiser': 'PEAR','Potato Sweet': 'POTATO',"Granny Smith":"APPLE"}
+            'Pear Kaiser': 'PEAR','Potato Sweet': 'POTATO',"Granny Smith":"APPLE",'Banana':'BANANA'}
     query = f"""
         SELECT *
         FROM {GCP_PROJECT}.{BQ_DATASET}.{TABLE}
