@@ -38,7 +38,6 @@ def test_connect():
 def receive_image(image):
     # Decode the base64-encoded image data
     image = base64_to_image(image)
-    frame_resized = cv2.resize(image, (640, 360))
     image = Image.fromarray(image)
     processed_image, target_sizes = preprocessing(image, image_processor)
     objs_boxes = prediction(processed_image, target_sizes, image_processor, image, model)
@@ -60,4 +59,4 @@ def index():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=6400, host='0.0.0.0')
+    socketio.run(app, debug=True, port=8080, host='0.0.0.0')
