@@ -1,6 +1,6 @@
 /*var socket = io.connect(
   //window.location.protocol + "//" + document.domain + ":" + location.port
-  'http://localhost:8080'
+  'https://carbon-calculator-rw-klerphlnqq-ew.a.run.app'
 );
 */
 var socket = io.connect(window.location.origin);
@@ -66,7 +66,7 @@ setInterval(() => {
 }, 1000 / VIDEO_FPS);
 
 // Inference
-const INFERENCE_FPS = 2;
+const INFERENCE_FPS = 5;
 setInterval(() => {
   var data = canvas.toDataURL("image/jpeg", 0.5);
   socket.emit("image", data);
