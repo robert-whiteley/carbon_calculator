@@ -33,7 +33,7 @@ def load_model():
 
     print("✅ base_model loaded")
 
-    tuned_model = tf.keras.saving.load_model(os.path.join(os.getcwd(), 'carb_calc', 'first_model.keras'))
+    tuned_model = tf.keras.saving.load_model(os.path.join(os.getcwd(), 'carb_calc', '16.keras'))
 
     print("✅ tuned_model loaded")
 
