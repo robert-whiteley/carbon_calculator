@@ -3,7 +3,7 @@
   'https://carbon-calculator-rw-klerphlnqq-ew.a.run.app'
 );
 */
-var socket = io.connect('window.location.origin');
+var socket = io.connect('https://carbon-calculator-rw-klerphlnqq-ew.a.run.app');
 
 socket.on("connect", function () {
   console.log("Connected...!", socket.connected);
