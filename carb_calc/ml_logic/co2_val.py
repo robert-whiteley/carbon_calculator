@@ -61,7 +61,7 @@ def co2_query(text:str):
     result = query_job.result()
     df = result.to_dataframe()
     co2 = df.iloc[-1,-1]
-    out = {text:co2}
+    out = {libary[text].title():round(co2,4)}
     #Returning a Dict with the input text and the crabon value.
     #eg {orange:0.3}
     return out
