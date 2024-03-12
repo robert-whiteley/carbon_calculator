@@ -1,5 +1,5 @@
 start_api:
-	python carb_calc/api/fast.py
+	gunicorn --worker-class gevent --bind :${PORT}  --workers 1 --timeout 0 carb_calc.api.flasky:app
 
 install_requirements:
 	@pip install -r requirements.txt
