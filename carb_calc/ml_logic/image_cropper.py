@@ -15,6 +15,7 @@ def image_cropper(image, object_localisation):
 
     # get the bounding box
     bbox = object_localisation['objects'][0]['vertices']
+    print(bbox)
 
     # get the bounding box array elements
     for coord in bbox:
