@@ -9,7 +9,7 @@ from PIL import Image
 
 app = Flask(__name__, static_folder="./templates/static")
 app.config["SECRET_KEY"] = "secret!"
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='*')
 model = load_model()
 image_processor = load_preprocessor()
 
