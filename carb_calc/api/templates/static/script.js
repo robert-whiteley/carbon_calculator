@@ -49,7 +49,11 @@ function drawBoundingBoxes() {
 
     // Draw label text on top corner of the bounding box
     context.fillStyle = 'green';
+<<<<<<< HEAD
     context.font = '14px Montserrat';
+=======
+    context.font = '14px Arial';
+>>>>>>> 669b16367c62837f5c1fd3eca727832c6adfe2a6
     context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
   });
 }

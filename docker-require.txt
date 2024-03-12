@@ -13,3 +13,5 @@ python-socketio==4.6.0
 Flask==2.0.3
 Werkzeug==2.0.3
 opencv_python
+gunicorn
+gevent
