@@ -42,16 +42,16 @@ def receive_image(image):
     processed_image, target_sizes = preprocessing(image, image_processor)
     objs_boxes = prediction(processed_image, target_sizes, image_processor, image, model)
 
-
     #processed_img_data = base64.b64encode(frame_encoded).decode()
     #b64_src = "data:image/jpg;base64,"
     #processed_img_data = b64_src + processed_img_data
     package = {'bboxes': objs_boxes}
     emit('result', package)
 
-    if len(objs_boxes) > 0:
-        emit("classification", objs_boxes[0]['class'])
 
+@app.route("/v3")
+def v3():
+    return render_template("edge.html")
 
 @app.route("/")
 def index():

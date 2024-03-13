@@ -25,6 +25,7 @@ var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 video.width = 600;
 video.height = 450;
 
+
 if (navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices
     .getUserMedia({
@@ -49,7 +50,7 @@ function drawBoundingBoxes() {
 
     // Draw label text on top corner of the bounding box
     context.fillStyle = 'green';
-    context.font = '14px Montserrat';
+    context.font = '16px Montserrat';
     context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
   });
 }
@@ -66,11 +67,12 @@ setInterval(() => {
 }, 1000 / VIDEO_FPS);
 
 // Inference
-const INFERENCE_FPS = 5;
+const INFERENCE_FPS = 1;
 setInterval(() => {
   var data = canvas.toDataURL("image/jpeg", 0.5);
   socket.emit("image", data);
 }, 1000 / INFERENCE_FPS);
+
 
 socket.on("result", function(result){
   if (socketActive){
