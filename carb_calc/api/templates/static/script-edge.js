@@ -13,11 +13,11 @@ var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 var multipleObjectsCheckbox = document.getElementById("multipleObjectsCheckbox");
 //let desiredClasses = ['apple', 'banana', 'orange', 'broccoli', 'carrot']
 var desiredClasses = {
-  "carrot": 0.235,
-  "apple": 0.2539,
+  "carrot": 0.24,
+  "apple": 0.25,
   "broccoli":0.57,
-  "banana":0.8175,
-  "orange":0.3,
+  "banana":0.82,
+  "orange":0.30,
 };
 
 video.width = 600;
@@ -45,10 +45,36 @@ function drawBoundingBoxes() {
     context.fillStyle = "rgba(195, 255, 104, 0.1)";
     context.fillRect(bbox.x, bbox.y, bbox.width, bbox.height);
 
+    // Calculate dimensions for text background rectangle
+    const text = bbox.class;
+    const textMetrics = context.measureText(text);
+    const padding = 2;
+    const textBackgroundWidth = textMetrics.width + padding * 2 +2;
+    const textBackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+
+    // Calculate dimensions for text background rectangle
+    const text2 = 'CO2 ' + desiredClasses[bbox.class];
+    const textMetrics2 = context.measureText(text2);
+    const text2BackgroundWidth = textMetrics2.width + padding * 2;
+    const text2BackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+
+    // Draw text background rectangle
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.fillRect(bbox.x, bbox.y, textBackgroundWidth+2, textBackgroundHeight);
+
+    // Draw text background rectangle
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.fillRect(bbox.x + bbox.width - text2BackgroundWidth -4, bbox.y, text2BackgroundWidth +2, text2BackgroundHeight);
+
     // Draw label text on top corner of the bounding box
     context.fillStyle = 'green';
     context.font = '16px Montserrat';
     context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
+
+    // Draw label text on top corner of the bounding box
+    context.fillStyle = 'green';
+    context.font = '14px Montserrat';
+    context.fillText(text2, bbox.x + bbox.width - text2BackgroundWidth +2, bbox.y + 14);
   });
 }
 
@@ -109,7 +135,7 @@ cocoSsd.load().then(model => {
         if (modal.style.display != "block" && boundingBoxes.length>multipleObjectsCheckbox.checked){
           var html_popup_content = '';
           boundingBoxes.forEach(function(bbox){
-            internal_content = `<div class="object ${bbox.class}"><img src="${bbox.croppedImage}" alt="Cropped Image"><p>Class: ${bbox.class}</p><p>Carbon Footprint: ${desiredClasses[bbox.class]}</p></div>`;
+            internal_content = `<div class="object ${bbox.class}"><img src="${bbox.croppedImage}" alt="Cropped Image"><div class="obj-description"><p><span>Class:</span> ${(bbox.class).charAt(0).toUpperCase() + (bbox.class).slice(1)}</p><p><span>Carbon Footprint:</span> ${desiredClasses[bbox.class]}Kg/Kg of ${bbox.class}s</p></div></div>`;
             html_popup_content = html_popup_content.concat(internal_content);
           });
           popupContent.innerHTML = html_popup_content;
