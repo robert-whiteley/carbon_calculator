@@ -45,10 +45,36 @@ function drawBoundingBoxes() {
     context.fillStyle = "rgba(195, 255, 104, 0.1)";
     context.fillRect(bbox.x, bbox.y, bbox.width, bbox.height);
 
+    // Calculate dimensions for text background rectangle
+    const text = bbox.class;
+    const textMetrics = context.measureText(text);
+    const padding = 2;
+    const textBackgroundWidth = textMetrics.width + padding * 2 +2;
+    const textBackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+
+    // Calculate dimensions for text background rectangle
+    const text2 = 'CO2 ' + desiredClasses[bbox.class];
+    const textMetrics2 = context.measureText(text2);
+    const text2BackgroundWidth = textMetrics2.width + padding * 2;
+    const text2BackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+
+    // Draw text background rectangle
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.fillRect(bbox.x, bbox.y, textBackgroundWidth+2, textBackgroundHeight);
+
+    // Draw text background rectangle
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.fillRect(bbox.x + bbox.width - text2BackgroundWidth -4, bbox.y, text2BackgroundWidth +2, text2BackgroundHeight);
+
     // Draw label text on top corner of the bounding box
     context.fillStyle = 'green';
     context.font = '16px Montserrat';
     context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
+
+    // Draw label text on top corner of the bounding box
+    context.fillStyle = 'green';
+    context.font = '14px Montserrat';
+    context.fillText(text2, bbox.x + bbox.width - text2BackgroundWidth +2, bbox.y + 14);
   });
 }
 
