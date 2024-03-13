@@ -13,11 +13,11 @@ var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 var multipleObjectsCheckbox = document.getElementById("multipleObjectsCheckbox");
 //let desiredClasses = ['apple', 'banana', 'orange', 'broccoli', 'carrot']
 var desiredClasses = {
-  "carrot": 0.235,
-  "apple": 0.2539,
+  "carrot": 0.24,
+  "apple": 0.25,
   "broccoli":0.57,
-  "banana":0.8175,
-  "orange":0.3,
+  "banana":0.82,
+  "orange":0.30,
 };
 
 video.width = 600;
@@ -109,7 +109,7 @@ cocoSsd.load().then(model => {
         if (modal.style.display != "block" && boundingBoxes.length>multipleObjectsCheckbox.checked){
           var html_popup_content = '';
           boundingBoxes.forEach(function(bbox){
-            internal_content = `<div class="object ${bbox.class}"><img src="${bbox.croppedImage}" alt="Cropped Image"><p>Class: ${bbox.class}</p><p>Carbon Footprint: ${desiredClasses[bbox.class]}</p></div>`;
+            internal_content = `<div class="object ${bbox.class}"><img src="${bbox.croppedImage}" alt="Cropped Image"><div class="obj-description"><p><span>Class:</span> ${(bbox.class).charAt(0).toUpperCase() + (bbox.class).slice(1)}</p><p><span>Carbon Footprint:</span> ${desiredClasses[bbox.class]}Kg/Kg of ${bbox.class}s</p></div></div>`;
             html_popup_content = html_popup_content.concat(internal_content);
           });
           popupContent.innerHTML = html_popup_content;
