@@ -7,17 +7,17 @@ var socketActive = true;
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 const video = document.querySelector("#videoElement");
-var classification = document.getElementById("classification")
-var bboxes = document.getElementById("bboxes")
+var classification = document.getElementById("classification");
+var bboxes = document.getElementById("bboxes");
 var autoModalCheckbox = document.getElementById("autoModalCheckbox");
 var multipleObjectsCheckbox = document.getElementById("multipleObjectsCheckbox");
-//let desiredClasses = ['apple', 'banana', 'orange', 'broccoli', 'carrot']
+// Define desired classes with their carbon footprints
 var desiredClasses = {
   "carrot": 0.24,
   "apple": 0.25,
-  "broccoli":0.57,
-  "banana":0.82,
-  "orange":0.30,
+  "broccoli": 0.57,
+  "banana": 0.82,
+  "orange": 0.30,
 };
 
 video.width = 600;
@@ -32,63 +32,53 @@ if (navigator.mediaDevices.getUserMedia) {
       video.srcObject = stream;
       video.play();
     })
-    .catch(function (err0r) {});
+    .catch(function (error) {});
 }
+
 // Store bounding boxes globally
 var boundingBoxes = [];
 
-// Draw bounding boxes
+// Draw bounding boxes on canvas
 function drawBoundingBoxes() {
   boundingBoxes.forEach(function(bbox) {
+    // Draw bounding box
     context.strokeRect(bbox.x, bbox.y, bbox.width, bbox.height);
     context.lineWidth = 1;
     context.fillStyle = "rgba(195, 255, 104, 0.1)";
     context.fillRect(bbox.x, bbox.y, bbox.width, bbox.height);
 
-    // Calculate dimensions for text background rectangle
+    // Draw text background for class
     const text = bbox.class;
-    const textMetrics = context.measureText(text);
     const padding = 2;
-    const textBackgroundWidth = textMetrics.width + padding * 2 +2;
+    const textBackgroundWidth = context.measureText(text).width + padding * 2 + 2;
     const textBackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.fillRect(bbox.x, bbox.y, textBackgroundWidth + 2, textBackgroundHeight);
 
-    // Calculate dimensions for text background rectangle
+    // Draw text background for carbon footprint
     const text2 = 'CO2 ' + desiredClasses[bbox.class];
-    const textMetrics2 = context.measureText(text2);
-    const text2BackgroundWidth = textMetrics2.width + padding * 2;
-    const text2BackgroundHeight = 16 + padding * 2; // Assuming font size 16px
+    const text2BackgroundWidth = context.measureText(text2).width + padding * 2;
+    context.fillRect(bbox.x + bbox.width - text2BackgroundWidth - 4, bbox.y, text2BackgroundWidth + 2, textBackgroundHeight);
 
-    // Draw text background rectangle
-    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    context.fillRect(bbox.x, bbox.y, textBackgroundWidth+2, textBackgroundHeight);
-
-    // Draw text background rectangle
-    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    context.fillRect(bbox.x + bbox.width - text2BackgroundWidth -4, bbox.y, text2BackgroundWidth +2, text2BackgroundHeight);
-
-    // Draw label text on top corner of the bounding box
+    // Draw label text for class
     context.fillStyle = 'green';
     context.font = '16px Montserrat';
-    context.fillText(bbox.class, bbox.x+2, bbox.y + 14);
+    context.fillText(bbox.class, bbox.x + 2, bbox.y + 14);
 
-    // Draw label text on top corner of the bounding box
-    context.fillStyle = 'green';
+    // Draw label text for carbon footprint
     context.font = '14px Montserrat';
-    context.fillText(text2, bbox.x + bbox.width - text2BackgroundWidth +2, bbox.y + 14);
+    context.fillText(text2, bbox.x + bbox.width - text2BackgroundWidth + 2, bbox.y + 14);
   });
 }
 
 // Video rendering
 const VIDEO_FPS = 30;
 setInterval(() => {
-  width = video.width;
-  height = video.height;
-  context.drawImage(video, 0, 0, width, height);
-
-  // Draw bounding boxes
+  context.drawImage(video, 0, 0, video.width, video.height);
   drawBoundingBoxes();
 }, 1000 / VIDEO_FPS);
 
+// Function to close the modal
 function closeModal() {
   modal.style.display = "none";
   // Add the event listener back
@@ -96,16 +86,15 @@ function closeModal() {
   autoModalCheckbox.checked = false;
 }
 
+// Inference logic using COCO-SSD model
 INFERENCE_AT_EDGE_FPS = 5
 cocoSsd.load().then(model => {
   setInterval(() => {
     var data = canvas;
     model.detect(data).then(result => {
-      if (result.length >0) {
-        // Clear previous bounding boxes
+      if (result.length > 0) {
         boundingBoxes = [];
-
-        result.forEach(function(obj){
+        result.forEach(function(obj) {
           var bbox = {
             x: obj['bbox'][0],
             y: obj['bbox'][1],
@@ -114,48 +103,39 @@ cocoSsd.load().then(model => {
             class: obj['class']
           };
 
-          if (Object.keys(desiredClasses).includes(bbox.class)){
-            // Create a new canvas to draw the cropped image
+          if (Object.keys(desiredClasses).includes(bbox.class)) {
             var cropCanvas = document.createElement('canvas');
             cropCanvas.width = bbox.width;
             cropCanvas.height = bbox.height;
             var cropContext = cropCanvas.getContext('2d');
-
-            // Draw the cropped image on the new canvas
             cropContext.drawImage(video, bbox.x, bbox.y, bbox.width, bbox.height, 0, 0, bbox.width, bbox.height);
-
-            // Convert the cropped image canvas to a data URL
             var croppedImageDataURL = cropCanvas.toDataURL("image/jpeg", 0.5);
             bbox.croppedImage = croppedImageDataURL
-
-            // Add to global bounding boxes
             boundingBoxes.push(bbox);
           }
         });
-        if (modal.style.display != "block" && boundingBoxes.length>multipleObjectsCheckbox.checked){
+        if (modal.style.display != "block" && boundingBoxes.length > multipleObjectsCheckbox.checked) {
           var html_popup_content = '';
-          boundingBoxes.forEach(function(bbox){
+          boundingBoxes.forEach(function(bbox) {
             internal_content = `<div class="object ${bbox.class}"><img src="${bbox.croppedImage}" alt="Cropped Image"><div class="obj-description"><p><span>Class:</span> ${(bbox.class).charAt(0).toUpperCase() + (bbox.class).slice(1)}</p><p><span>Carbon Footprint:</span> ${desiredClasses[bbox.class]}Kg/Kg of ${bbox.class}s</p></div></div>`;
             html_popup_content = html_popup_content.concat(internal_content);
           });
           popupContent.innerHTML = html_popup_content;
-          console.log(html_popup_content)
           if (autoModalCheckbox.checked) {
-            // Show the popup modal
             modal.style.display = "block";
           }
         }
       }
     });
   }, 1000 / INFERENCE_AT_EDGE_FPS);
-})
+});
 
-// When the user clicks on <span> (x), close the modal
+// Event listener to close modal when <span> (x) is clicked
 span.onclick = function() {
   closeModal();
 }
 
-// When the user clicks anywhere outside of the modal, close it
+// Event listener to close modal when clicked outside of it
 window.onclick = function(event) {
   if (event.target == modal) {
     closeModal();
