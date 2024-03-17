@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carbon Calculator</title>
+  <!-- External scripts and stylesheets -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+  <!-- Custom styles -->
   <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
-
 </head>
 <body>
   <!-- Popup modal -->
@@ -23,6 +25,7 @@
       </div>
     </div>
   </div>
+  <!-- Header section -->
   <header>
     <div class="logo">CC</div>
     <div class="brand">
@@ -30,6 +33,7 @@
         <p>The first step for a better world!</p>
     </div>
   </header>
+  <!-- Main section -->
   <main>
     <div id="container">
       <canvas id="canvas" width="600" height="450"></canvas>
@@ -42,17 +46,19 @@
       <input type="checkbox" id="autoModalCheckbox"><span>Auto-Detection</span>
     </div>
   </main>
-  <div id="screen"></div>
+  <!-- Project description section -->
   <section id="projectDescription">
     <h2>About the Project</h2>
     <p>
-      The Carbon Calculator project aims to raise awareness about carbon emissions and help estimate carbon footprint of vegetables and fruits. By analysing live stream footage, the system can identify fruits and vegetables, providing valuable insights into environmental impact.
+      The Carbon Calculator project aims to raise awareness about carbon emissions and help estimate the carbon footprint of vegetables and fruits. By analyzing live stream footage, the system can identify fruits and vegetables, providing valuable insights into environmental impact.
     </p>
     <img id="team-pic" src="{{ url_for('static',filename='team.jpg')}}">
   </section>
+  <!-- Footer section -->
   <footer>
     <p>&copy; 2024 Carbon Calculator. All rights reserved.</p>
   </footer>
+  <!-- Custom JavaScript -->
   <script src="{{ url_for('static',filename='script.js')}}"></script>
 </body>
 </html>
