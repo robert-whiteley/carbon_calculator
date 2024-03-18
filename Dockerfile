@@ -7,4 +7,4 @@ RUN pip install -r docker-require.txt
 #WORKDIR /carb_calc
 ENV PYTHONPATH=/carb_calc
 #CMD python api/flasky.py
-CMD gunicorn --worker-class gevent --bind :$PORT --workers 1 --timeout 0 carb_calc.api.flasky:app
+CMD gunicorn --worker-class gevent --bind :${PORT:-8000} --workers 1 --timeout 0 --log-level debug carb_calc.api.flasky:app
